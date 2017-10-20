@@ -8,9 +8,9 @@ public class BraveKnight implements Knight {
     private Quest quest;
     private Minstrel minstrel;
 
-    public BraveKnight(Quest quest) {
+    public BraveKnight(Quest quest, Minstrel minstrel) {
         this.quest = quest;
-        //this.minstrel = minstrel;
+        this.minstrel = minstrel;
     }
 
     @Override
