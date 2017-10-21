@@ -5,6 +5,7 @@
 
     <bean id="knight" class="knights.BraveKnight">
         <constructor-arg ref="quest"></constructor-arg>
+        <constructor-arg ref="minstrel"></constructor-arg>
     </bean>
 
     <bean id="minstrel" class="knights.Minstrel">

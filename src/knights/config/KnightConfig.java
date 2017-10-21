@@ -1,9 +1,6 @@
 package knights.config;
 
-import knights.BraveKnight;
-import knights.Knight;
-import knights.Quest;
-import knights.SlayDragonQuest;
+import knights.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class KnightConfig {
     @Bean
     public Knight knight(){
-        return new BraveKnight(quest());
+        return new BraveKnight(quest(), new Minstrel(System.out));
     }
 
     @Bean
