@@ -3,7 +3,24 @@ package soundsystem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
+
+/**
+ * version 2
+ */
+@Configuration
+@Import(CDConfig.class)
+public class CDPlayerConfig{
+    @Bean
+    public CDPlayer cdPlayer(CompactDisc compactDisc){
+        return new CDPlayer(compactDisc);
+    }
+}
+
+
+/**
+ * vertion 1
 @Configuration  //表明这是一个配置类
 //@ComponentScan    //注释后，抛出BeanCreation-Exception 异常
 public class CDPlayerConfig {
@@ -32,3 +49,4 @@ public class CDPlayerConfig {
         return new CDPlayer(sgtPeppers());
     }
 }
+*/
