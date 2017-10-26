@@ -157,5 +157,36 @@ public class PersistenceTest{
 ```
 
 ## 2. 条件化的 bean
-- @Conditional注解：条件化地配置Bean组件
-P113
+- Spring4 新增功能
+- @Conditional注解：条件化地配置Bean组件， 可以用到带有@Bean注解的方法上，如果给定的条件计算结果为true，就创建这个bean，否则的话，这个bean就会被忽略
+- 例子：
+```java
+//假设有一个名为`MagicBean`的类，我们希望设置了magic环境属性的是哦户，Spring才会实例化这个类，如果环境中没有这个属性，嘛呢MagicBean将会被忽略
+//条件化的配置了MagicBean
+
+@Bean
+@Conditional(MagicExistsCondition.class)
+public MagicBean magicBean(){
+    return new MagicBean();
+}
+```
+- 设置给@Conditional的类可以是任意实现了Condition接口的类型，这个接口实现起来很简单，**只需要提供matches()方法的实现即可**
+    - 如果matches()方法返回true，那么就会创建带有@Conditional注解的bean，如果matches()方法返回false，将不会创建这些bean。
+
+### ConditionContext接口
+```java
+public interface ConditionContext{
+    BeanDefinitionRegistry getRegistry();               
+    //借助 getRegistry() 返回的 BeanDefinitionRegistry 检查 bean 定义；
+    ConfigurableListableBeanFactory getBeanFactory();
+    //借助 getBeanFactory() 返回的 ConfigurableListableBean 检查 bean 是否存在，甚至探查bean的属性
+    Enviroment getEnvironment();
+    //借助 getEnvironment() 返回的Environment检查环境变量是否存在以及它的值是什么
+    ResourceLoader getResourceLoader();
+    //读取并探查getResourceLoader()返回的ResourceLoader所加载的资源；
+    ClassLoader getClassLoader();
+    //借助getClassLoader()返回的ClassLoader加载并检查类是否存在。
+}
+```
+
+P114
