@@ -189,4 +189,64 @@ public interface ConditionContext{
 }
 ```
 
-P114
+## 3. 处理自动装配的歧义性
+- 有多个可匹配的bean时，Spring不会自动装配属性、构造器参数或方法参数，会直接抛出异常：`NoUniqueBeanDefinitionException: `
+```java
+//依赖注入，自动装配
+@Autowired
+public void setDessert(Dessert dessert){
+    this.dessert = dessert;
+}
+
+//三个实现类
+@Component
+public class Cake implements Dessert{...}
+@Component
+public class Cookies implements Dessert{...}
+@Component
+public class IceCream implements Dessert{...}
+```
+- 在扫描组件的时候，能够发现他们，并且将其创建为Spring应用上下文里面的bean。然后当Spring视图自动装配`setDessert()`中的Dessert参数时，它并没有唯一、无歧义的可选值。
+- 解决Spring自动装配歧义性的方法：
+  1. 将可选 bean　中的某一个设为首选的；(使用注解：`@Primary`)
+```java
+//自动装配
+@Component
+@Primary
+public class IceCream implements Dessert{...}
+//使用JAVA显式声明：
+@Bean
+@Primary
+public Dessert iceCream(){
+    return new IceCream();
+}
+```
+  1. 使用限定符来帮助Spring将可选的bean的范围缩小到只有一个bean。(使用注解：`@Qualifier()`)
+```java
+@Autowired
+@Qualifier("iceCream")  //指定想要注入进去的bean(能够和@Inject协同使用)
+public void setDessert(Dessert dessert){
+    this.dessert = dessert;
+}
+```
+    - 补充：@Qualifier注解所引用的bean要String类型作为限定符。如果没有指定其他的限定符的话，所有的bean都会给定一个默认的限定符，这个限定符和bean的ID相同。（**声明和引用的时候都会用到@Qualifier()注解**）
+```java
+//声明
+@Component
+@Qualifier("cold")
+public class IceCream implements Dessert{...}
+
+//引用
+@Autowired
+@Qualifier("cold")
+public Dessert setDessert(Dessert dessert){
+    this.dessert = dessert;
+}
+
+//通过JAVA显式配置bean
+@Bean
+@Qualifier("cold")
+public Desset iceCream(){
+    return new IceCream();
+}
+```
